@@ -1,0 +1,36 @@
+{
+    "name": "seba/api",
+    "description": "Seba's APIs",
+    "homepage": "https://github.com/TelegramSDK/BotAPI",
+    "authors": [
+      {
+        "name": "Sebastiano Racca",
+        "email": "sebastiano@racca.me",
+        "role": "Developer",
+        "homepage": "https://github.com/SebaOfficial"
+      }
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+      "classmap": [
+        "src/"
+      ]
+    },
+    "require": {
+        "bramus/router": "^1.6",
+        "seba/http": "^1.1",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": {
+      "friendsofphp/php-cs-fixer": "^3.46"
+    },
+    "scripts": {
+      "lint": "vendor/bin/php-cs-fixer fix ."
+    },
+    "config": {
+      "optimize-autoloader": true,
+      "preferred-install": "dist",
+      "sort-packages": true
+    }
+}
