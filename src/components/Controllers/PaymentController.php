@@ -8,10 +8,6 @@ class PaymentController extends APIController
 {
     public function init(): static
     {
-        $this->response->setHeaders([
-            'Access-Control-Allow-Origin: *',
-            'Etag: ' . md5($this->router->getRequestMethod(). $this->router->getCurrentUri()),
-        ]);
         $newPaymentRegex = '/(' . $_ENV['PAYMENT_METHODS'] . ')/(\d+)';
 
         // GET /pay
@@ -19,13 +15,13 @@ class PaymentController extends APIController
         // OPTIONS /pay
         $this->router->options('/', fn () => $this->optionsIndex());
 
-        // GET|POST /pay/{payment_method}/{amount}
+        // GET|POST /pay/:payment_method/:amount
         $this->router->match('GET|POST', $newPaymentRegex, fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount));
-        // OPTIONS /pay/{payment_method}/{amount}
+        // OPTIONS /pay/:payment_method/:amount
         $this->router->options($newPaymentRegex, fn () => $this->optionsNewPayment());
 
         // Not Found
-        $this->router->set404('(/.*)?', fn () => $this->set404());
+        $this->router->set404('/(/.*)?', fn () => $this->set404());
 
         return $this;
     }
@@ -48,7 +44,9 @@ class PaymentController extends APIController
     private function setIndexHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
+            'Access-Control-Allow-Origin: *',
             'Access-Control-Max-Age: 172800', // 48 hours
+            'Etag: ' . md5($this->router->getRequestMethod(). $this->router->getCurrentUri()),
             'Access-Control-Allow-Methods: GET, POST, OPTIONS',
         ]);
     }
@@ -76,7 +74,9 @@ class PaymentController extends APIController
     private function setNewPaymentHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
+            'Access-Control-Allow-Origin: *',
             'Access-Control-Max-Age: 86400', // 24 hours
+            'Etag: ' . md5($this->router->getRequestMethod(). $this->router->getCurrentUri()),
             'Access-Control-Allow-Methods: GET, POST, OPTIONS',
         ]);
     }
@@ -87,7 +87,7 @@ class PaymentController extends APIController
             ->setBody([
                 'ok' => false,
                 'available_payment_methods' => explode('|', $_ENV['PAYMENT_METHODS']),
-                'error' => 'Payment method not found'
+                'error' => 'Payment method not found',
             ])
         ->send();
     }
