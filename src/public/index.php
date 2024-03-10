@@ -2,26 +2,28 @@
 
 require_once dirname(__DIR__) . "/environment.php";
 
-use Bramus\Router\Router;
-use Seba\HTTP\ResponseHandler;
+use Seba\HTTP\{ResponseHandler, IncomingRequestHandler};
+use Seba\HTTP\Router\{Router, RequestMethods};
 
-$router = new Router();
+$request = new IncomingRequestHandler();
 $response = new ResponseHandler(200);
+
+$router = new Router($request, $response);
 
 $response->setHeaders([
     'Content-Type: application/json',
     'X-Powered-By: racca.me',
 ]);
 
-$router->set404(
-    fn () =>
-    $response->setHttpCode(404)
-        ->setBody([
-            'ok' => false,
-            'error' => 'Resource not found'
-        ])->send()
-);
+$router->mount('/pay', fn(Router $router) => (new Seba\API\Controllers\PaymentController($router, $response, $request))->init());
 
-$router->mount('/pay', new Seba\API\Controllers\PaymentController($router, $response));
+$router->onError(404,
+    fn () => $response->setHttpCode(404)
+                ->setBody([
+                    'ok' => false,
+                    'error' => 'Resource not found'
+                ])
+            ->send()
+);
 
 $router->run();

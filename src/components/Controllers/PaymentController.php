@@ -3,25 +3,36 @@
 namespace Seba\API\Controllers;
 
 use Seba\HTTP\ResponseHandler;
+use Seba\HTTP\Router\RequestedMethods;
+use Seba\HTTP\Router\Router;
 
 class PaymentController extends APIController
 {
     public function init(): static
     {
-        $newPaymentRegex = '/(' . $_ENV['PAYMENT_METHODS'] . ')/(\d+)';
-
         // GET /pay
-        $this->router->get('/', fn () => $this->getIndex());
+        $this->router->get('/?', fn () => $this->getIndex());
         // OPTIONS /pay
-        $this->router->options('/', fn () => $this->optionsIndex());
+        $this->router->options('/?', fn () => $this->optionsIndex());
 
-        // GET|POST /pay/:payment_method/:amount
-        $this->router->match('GET|POST', $newPaymentRegex, fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount));
-        // OPTIONS /pay/:payment_method/:amount
-        $this->router->options($newPaymentRegex, fn () => $this->optionsNewPayment());
+        // ALL /pay/:payment_method
+        $this->router->mount('/(' . $_ENV['PAYMENT_METHODS'] . ')/?', function (Router $router) {
 
-        // Not Found
-        $this->router->set404('/(/.*)?', fn () => $this->set404());
+            // GET|POST /pay/:payment_method/:amount
+            $router->match(
+                RequestedMethods::GET || RequestedMethods::POST,
+                '/(\d+)',
+                fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount)
+            );
+
+            $router->options('/(\d+)', fn () => $this->optionsNewPayment());
+
+            // Amount is not a number
+            $router->onError(404, fn () => $this->amountNotANumber());
+        });
+
+        // Payment method doesn't exist
+        $this->router->onError(404, fn () => $this->paymentMethodNotExist());
 
         return $this;
     }
@@ -46,7 +57,7 @@ class PaymentController extends APIController
         return $this->response->setHeaders([
             'Access-Control-Allow-Origin: *',
             'Access-Control-Max-Age: 172800', // 48 hours
-            'Etag: ' . md5($this->router->getRequestMethod(). $this->router->getCurrentUri()),
+            'Etag: ' . md5($this->request->getMethod(). $this->request->getUri()),
             'Access-Control-Allow-Methods: GET, POST, OPTIONS',
         ]);
     }
@@ -76,18 +87,28 @@ class PaymentController extends APIController
         return $this->response->setHeaders([
             'Access-Control-Allow-Origin: *',
             'Access-Control-Max-Age: 86400', // 24 hours
-            'Etag: ' . md5($this->router->getRequestMethod(). $this->router->getCurrentUri()),
+            'Etag: ' . md5($this->request->getMethod(). $this->request->getUri()),
             'Access-Control-Allow-Methods: GET, POST, OPTIONS',
         ]);
     }
 
-    private function set404(): void
+    private function paymentMethodNotExist(): void
     {
         $this->response->setHttpCode(404)
             ->setBody([
                 'ok' => false,
                 'available_payment_methods' => explode('|', $_ENV['PAYMENT_METHODS']),
                 'error' => 'Payment method not found',
+            ])
+        ->send();
+    }
+
+    private function amountNotANumber(): void
+    {
+        $this->response->setHttpCode(400)
+            ->setBody([
+                'ok' => false,
+                'error' => 'Amount must be an integer',
             ])
         ->send();
     }
