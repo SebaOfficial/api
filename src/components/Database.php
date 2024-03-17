@@ -6,8 +6,8 @@ namespace Seba\API;
  * SQLite Database class.
  * This class provides a simple interface for interacting with SQLite databases.
  *
- * @author Sebastiano Racca <sebastiano@racca.me>
  * @package Seba\API
+ * @author Sebastiano Racca <sebastiano@racca.me>
  */
 class Database
 {
@@ -61,7 +61,7 @@ class Database
      */
     public function init(string $pathToStructure): array
     {
-        $queries = explode(';', strtr(file_get_contents($pathToStructure), "\n", ""));
+        $queries = explode(';', strtr(file_get_contents($pathToStructure), ["\n" => ""]));
         $results = [];
 
         foreach ($queries as $query) {

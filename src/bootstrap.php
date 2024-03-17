@@ -2,7 +2,8 @@
 
 require_once __DIR__ . "/environment.php";
 
-use Seba\API\Helpers\NewsLetter;
+use Seba\API\Helpers\NewsletterHelper;
+use Seba\API\Helpers\Utils;
 
 const ANSI_RESET = "\033[0m";
 const ANSI_GREEN = "\033[32m";
@@ -18,10 +19,15 @@ function truncate($string, $length, $dots = "...")
     return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
 }
 
-$newsletterdb = NewsLetter::getNewsletterDb()->init(ROOT_DIR . "/database/newsletter.sql");
+$newsletterdb = NewsletterHelper::getNewsletterDb()->init(ROOT_DIR . "/database/newsletter.sql");
 
 foreach($newsletterdb as $stmt) {
     echo $stmt->ok ? ANSI_GREEN : ANSI_RED;
     echo $stmt->ok ? (($pos = strpos($stmt->query, ' (')) !== false ? substr($stmt->query, 0, $pos) : $stmt->query) : $stmt->error;
     echo "...\n" . ANSI_RESET;
 }
+
+file_put_contents(
+    Utils::getAdminPasswordPath(),
+    password_hash(readline("Insert the new admin password: "), PASSWORD_BCRYPT)
+);

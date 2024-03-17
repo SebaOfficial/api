@@ -3,7 +3,7 @@
 require_once dirname(__DIR__) . "/environment.php";
 
 use Seba\HTTP\{ResponseHandler, IncomingRequestHandler};
-use Seba\HTTP\Router\{Router, RequestMethods};
+use Seba\HTTP\Router\Router;
 
 $request = new IncomingRequestHandler();
 $response = new ResponseHandler(200);
@@ -15,9 +15,11 @@ $response->setHeaders([
     'X-Powered-By: racca.me',
 ]);
 
-$router->mount('/pay', fn(Router $router) => (new Seba\API\Controllers\PaymentController($router, $response, $request))->init());
+$router->mount('/pay', fn (Router $router) => (new Seba\API\Controllers\PaymentController($router, $response, $request))->init());
+$router->mount('/newsletter', fn (Router $router) => (new Seba\API\Controllers\NewsletterController($router, $response, $request))->init());
 
-$router->onError(404,
+$router->onError(
+    404,
     fn () => $response->setHttpCode(404)
                 ->setBody([
                     'ok' => false,
