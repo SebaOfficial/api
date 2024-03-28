@@ -4,17 +4,27 @@ namespace Seba\API\Controllers;
 
 use Seba\API\Helpers\{NewsletterHelper, Utils};
 use Seba\API\Properties\RequestError;
+use Seba\HTTP\ResponseHandler;
 use Seba\HTTP\Router\Router;
 
 class NewsletterController extends APIController
 {
     public function init(): static
     {
+        $this->response->setHeaders([
+            'Access-Control-Allow-Origin: *',
+            'Access-Control-Allow-Headers: Content-Type'
+        ]);
+
         // ALL /newsletter
         $this->router->mount('/?', function (Router $router) {
 
+            $router->get('.js?', fn () => $this->getScript());
+
             // POST /newsletter/sub
             $router->post('/sub/?', fn () => $this->newSub());
+            // OPTIONS /newsletter/sub
+            $router->options('/sub/?', fn () => $this->optionsSub());
 
 
             // DELETE /newsletter/sub/
@@ -25,12 +35,35 @@ class NewsletterController extends APIController
 
         // POST /newsletter/post
         $this->router->post('/post/?', fn () => $this->newPost());
+        // OPTIONS /newsletter/post
+        $this->router->options('/post/?', fn () => $this->optionsNewPost());
 
         return $this;
     }
 
+    private function optionsGetScript(): void {
+        $this->setGetScriptHeaders()->setHttpCode(204)->send();
+    }
+
+    private function getScript(): void {
+        $this->setGetScriptHeaders()->setHttpCode(200)->setBody(file_get_contents(ROOT_DIR . "/generated/newsletter.js"))->send();
+    }
+
+    private function setGetScriptHeaders(): ResponseHandler {
+        return $this->response->setHeaders([
+            'Content-Type: application/javascript; charset=utf-8',
+            'Cache-Control: public, max-age=30672000',
+        ]);
+    }
+
+    private function optionsSub(): void
+    {
+        $this->setSubHeaders()->setHttpCode(204)->send();
+    }
+
     private function newSub(): void
     {
+        $this->setSubHeaders();
         $email = $this->getRequiredParams(['email'])['email'];
 
         if(!NewsletterHelper::isValidEmail($email)) {
@@ -69,8 +102,16 @@ class NewsletterController extends APIController
         ->send();
     }
 
+    private function setSubHeaders(): ResponseHandler
+    {
+        return $this->response->setHeaders([
+            'Access-Control-Allow-Methods: POST, DELETE, OPTIONS',
+        ]);
+    }
+
     private function unsub(string $token): void
     {
+        $this->setSubHeaders();
         if($token == null) {
             $this->missingToken();
         }
@@ -110,9 +151,14 @@ class NewsletterController extends APIController
         ->send();
     }
 
+    private function optionsNewPost(): void
+    {
+        $this->setNewPostHeaders()->setHttpCode(204)->send();
+    }
 
     private function newPost(): void
     {
+        $this->setNewPostHeaders();
         $token = NewsletterHelper::getToken($this->response);
 
         if($token === null) {
@@ -156,6 +202,13 @@ class NewsletterController extends APIController
                 'ok' => true,
             ])
         ->send();
+    }
+
+    private function setNewPostHeaders(): ResponseHandler
+    {
+        return $this->response->setHeaders([
+            'Access-Control-Allow-Methods: POST, OPTIONS',
+        ]);
     }
 
     private function getWWWAuthenticateHeader(string $error, string $errorDescription): string

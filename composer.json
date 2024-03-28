@@ -27,7 +27,11 @@
       "friendsofphp/php-cs-fixer": "^3.46"
     },
     "scripts": {
-      "bootstrap": "@php src/bootstrap.php",
+      "bootstrap": [
+        "@php src/tools/bootstrap.php",
+        "@newsletter-embed"
+      ],
+      "newsletter-embed": "@php src/tools/newsletter-embed.php",
       "lint": "vendor/bin/php-cs-fixer fix ."
     },
     "config": {

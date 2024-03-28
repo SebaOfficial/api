@@ -13,3 +13,11 @@ database/*.db
 
 # Admin Password
 *.pwd
+
+# Generated assets
+generated/*
+!generated/.gitkeep
+
+# Node dependencies
+node_modules/
+package-lock.json
