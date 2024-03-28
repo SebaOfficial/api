@@ -5,8 +5,8 @@ require_once __DIR__ . "/environment.php";
 chdir(__DIR__ . '/newsletter/');
 
 exec("npm i && \
-    npm run rollup -- --environment API_URL:" . $_ENV['API_URL'] . " #&& \
-    #npm run minify
+    npm run rollup -- --environment API_URL:" . $_ENV['API_URL'] . " && \
+    npm run minify
 ", $output, $result_code);
 
 if($result_code !== 0) {
