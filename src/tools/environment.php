@@ -17,7 +17,8 @@ function commandExists(string $command): bool
     return $return_var === 0;
 }
 
-function error(string $str, int $exitCode = 1): void {
+function error(string $str, int $exitCode = 1): void
+{
     echo ANSI_RED . $str . ANSI_RESET . "\n";
     exit($exitCode);
 }

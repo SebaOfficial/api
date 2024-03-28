@@ -11,8 +11,8 @@ $response = new ResponseHandler(200);
 $router = new Router($request, $response);
 
 $response->setHeaders([
-    'Content-Type: application/json',
-    'X-Powered-By: racca.me',
+    'Content-Type' => 'application/json',
+    'X-Powered-By' => 'racca.me',
 ]);
 
 $router->mount('/pay', fn (Router $router) => (new Seba\API\Controllers\PaymentController($router, $response, $request))->init());

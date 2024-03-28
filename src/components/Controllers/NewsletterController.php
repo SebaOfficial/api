@@ -12,8 +12,8 @@ class NewsletterController extends APIController
     public function init(): static
     {
         $this->response->setHeaders([
-            'Access-Control-Allow-Origin: *',
-            'Access-Control-Allow-Headers: Content-Type'
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers' => 'Content-Type'
         ]);
 
         // ALL /newsletter
@@ -41,18 +41,21 @@ class NewsletterController extends APIController
         return $this;
     }
 
-    private function optionsGetScript(): void {
+    private function optionsGetScript(): void
+    {
         $this->setGetScriptHeaders()->setHttpCode(204)->send();
     }
 
-    private function getScript(): void {
+    private function getScript(): void
+    {
         $this->setGetScriptHeaders()->setHttpCode(200)->setBody(file_get_contents(ROOT_DIR . "/generated/newsletter.js"))->send();
     }
 
-    private function setGetScriptHeaders(): ResponseHandler {
+    private function setGetScriptHeaders(): ResponseHandler
+    {
         return $this->response->setHeaders([
-            'Content-Type: application/javascript; charset=utf-8',
-            'Cache-Control: public, max-age=30672000',
+            'Content-Type' => 'application/javascript; charset=utf-8',
+            'Cache-Control' => 'public, max-age=30672000',
         ]);
     }
 
@@ -105,7 +108,7 @@ class NewsletterController extends APIController
     private function setSubHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
-            'Access-Control-Allow-Methods: POST, DELETE, OPTIONS',
+            'Access-Control-Allow-Methods' => 'POST, DELETE, OPTIONS',
         ]);
     }
 
@@ -129,7 +132,7 @@ class NewsletterController extends APIController
                     'ok' => false,
                     'error' => 'The provided auth token is invalid.',
                 ])
-                ->setHeaders([$this->getWWWAuthenticateHeader('invalid_token', 'The provided auth token is invalid')])
+                ->setHeaders($this->getWWWAuthenticateHeader('invalid_token', 'The provided auth token is invalid'))
             ->send();
         }
 
@@ -147,7 +150,7 @@ class NewsletterController extends APIController
                 'ok' => false,
                 'error' => 'Must specify the auth token.',
             ])
-            ->setHeaders([$this->getWWWAuthenticateHeader('missing_token', 'Must specify the auth token')])
+            ->setHeaders($this->getWWWAuthenticateHeader('missing_token', 'Must specify the auth token'))
         ->send();
     }
 
@@ -173,7 +176,7 @@ class NewsletterController extends APIController
                     'ok' => false,
                     'error' => 'The provided auth token is invalid.',
                 ])
-                ->setHeaders([$this->getWWWAuthenticateHeader('invalid_token', 'The provided auth token is invalid')])
+                ->setHeaders($this->getWWWAuthenticateHeader('invalid_token', 'The provided auth token is invalid'))
             ->send();
         }
 
@@ -207,13 +210,13 @@ class NewsletterController extends APIController
     private function setNewPostHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
-            'Access-Control-Allow-Methods: POST, OPTIONS',
+            'Access-Control-Allow-Methods' => 'POST, OPTIONS',
         ]);
     }
 
-    private function getWWWAuthenticateHeader(string $error, string $errorDescription): string
+    private function getWWWAuthenticateHeader(string $error, string $errorDescription): array
     {
-        return "WWW-Authenticate: Bearer, error=\"$error\", error_description=\"$errorDescription\"";
+        return ["WWW-Authenticate" => "Bearer, error=\"$error\", error_description=\"$errorDescription\""];
     }
 
     private function getRequiredParams(array $requiredParams): array

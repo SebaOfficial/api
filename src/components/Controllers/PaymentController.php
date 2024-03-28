@@ -55,10 +55,10 @@ class PaymentController extends APIController
     private function setIndexHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
-            'Access-Control-Allow-Origin: *',
-            'Access-Control-Max-Age: 172800', // 48 hours
-            'Etag: ' . md5($this->request->getMethod(). $this->request->getUri()),
-            'Access-Control-Allow-Methods: GET, POST, OPTIONS',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Max-Age' => '172800', // 48 hours
+            'Etag' => md5($this->request->getMethod(). $this->request->getUri()),
+            'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
         ]);
     }
 
@@ -72,7 +72,7 @@ class PaymentController extends APIController
                 'url' => $url,
             ])
             ->setHeaders([
-                'Location: ' . $url,
+                'Location' => $url,
             ])
         ->send();
     }
@@ -85,10 +85,10 @@ class PaymentController extends APIController
     private function setNewPaymentHeaders(): ResponseHandler
     {
         return $this->response->setHeaders([
-            'Access-Control-Allow-Origin: *',
-            'Access-Control-Max-Age: 86400', // 24 hours
-            'Etag: ' . md5($this->request->getMethod(). $this->request->getUri()),
-            'Access-Control-Allow-Methods: GET, POST, OPTIONS',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Max-Age' => '86400', // 24 hours
+            'Etag' => md5($this->request->getMethod(). $this->request->getUri()),
+            'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
         ]);
     }
 

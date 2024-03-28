@@ -175,6 +175,7 @@
     border-radius: 5px;
     font-size: 16px;
     outline: none;
+    color: rgba(0, 0, 0, .25);
   }
 
   form button {
