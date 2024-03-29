@@ -20,11 +20,12 @@ class PaymentController extends APIController
 
             // GET|POST /pay/:payment_method/:amount
             $router->match(
-                RequestedMethods::GET || RequestedMethods::POST,
+                RequestedMethods::GET | RequestedMethods::POST,
                 '/(\d+)',
                 fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount)
             );
 
+            // OPTIONS /pay/:payment_method/:amount
             $router->options('/(\d+)', fn () => $this->optionsNewPayment());
 
             // Amount is not a number
