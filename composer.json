@@ -1,42 +1,42 @@
 {
-    "name": "seba/api",
-    "description": "Seba's APIs",
-    "homepage": "https://github.com/TelegramSDK/BotAPI",
-    "authors": [
-      {
-        "name": "Sebastiano Racca",
-        "email": "sebastiano@racca.me",
-        "role": "Developer",
-        "homepage": "https://github.com/SebaOfficial"
-      }
-    ],
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-      "classmap": [
-        "src/"
-      ]
-    },
-    "require": {
-      "php": ">= 8.1",
-      "seba/http": "^1.2",
-      "stripe/stripe-php": "^12.3",
-      "vlucas/phpdotenv": "^5.6"
-    },
-    "require-dev": {
-      "friendsofphp/php-cs-fixer": "^3.46"
-    },
-    "scripts": {
-      "bootstrap": [
-        "@php src/tools/bootstrap.php",
-        "@newsletter-embed"
-      ],
-      "newsletter-embed": "@php src/tools/newsletter-embed.php",
-      "lint": "vendor/bin/php-cs-fixer fix ."
-    },
-    "config": {
-      "optimize-autoloader": true,
-      "preferred-install": "dist",
-      "sort-packages": true
+  "name": "seba/api",
+  "description": "Seba's APIs",
+  "homepage": "https://github.com/TelegramSDK/BotAPI",
+  "authors": [
+    {
+      "name": "Sebastiano Racca",
+      "email": "sebastiano@racca.me",
+      "role": "Developer",
+      "homepage": "https://github.com/SebaOfficial"
     }
+  ],
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  },
+  "require": {
+    "php": ">= 8.1",
+    "seba/http": "^1.2",
+    "stripe/stripe-php": "^12.3",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.46"
+  },
+  "scripts": {
+    "bootstrap": [
+      "@php src/tools/bootstrap.php",
+      "@newsletter-embed"
+    ],
+    "newsletter-embed": "@php src/tools/newsletter-embed.php",
+    "lint": "vendor/bin/php-cs-fixer fix ."
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
 }
