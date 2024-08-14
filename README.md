@@ -20,8 +20,21 @@ This is a collection of useful APIs for Sebastiano's projects.
 | `GET`       | `/newsletter/unsub/:token` | None           | Alias for `DELETE /newsletter/sub/`.                                        |
 | `POST`      | `/newsletter/post/`        | Bearer         | Create a new post to send to all subscribers.                               |
 
-## Running
-You can run the application via docker compose:
-```bash
-docker-compose up -d --build
-```
+## Build
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/SebaOfficial/api
+   ```
+2. Add your `.env`
+
+   ```bash
+   cp ./.env.example ./.env
+   ```
+
+   And edit it with your information
+
+3. Build and start the container
+   ```bash
+   docker-compose up -d --build
+   ```
