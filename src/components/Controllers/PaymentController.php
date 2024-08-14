@@ -22,7 +22,7 @@ class PaymentController extends APIController
             $router->match(
                 RequestedMethods::GET | RequestedMethods::POST,
                 '/(\d+)',
-                fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount)
+                fn ($paymentMethod, $amount) => $this->newPayment($paymentMethod, $amount, $this->request->getMethod())
             );
 
             // OPTIONS /pay/:payment_method/:amount
@@ -63,11 +63,11 @@ class PaymentController extends APIController
         ]);
     }
 
-    private function newPayment($paymentMethod, $amount): void
+    private function newPayment($paymentMethod, $amount, $method): void
     {
         $url = (new \Seba\API\Helpers\Payment($paymentMethod, $amount))->getUrl();
 
-        $this->setNewPaymentHeaders()->setHttpCode(201)
+        $this->setNewPaymentHeaders()->setHttpCode($method === 'GET' ? 301 : 201)
             ->setBody([
                 'ok' => true,
                 'url' => $url,
