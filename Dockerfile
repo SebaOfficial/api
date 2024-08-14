@@ -10,6 +10,13 @@ COPY conf.d/apache.conf /etc/apache2/sites-available/000-default.conf
 
 RUN a2enmod rewrite
 
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip
+
 RUN composer install \
     --no-ansi \
     --no-dev \
