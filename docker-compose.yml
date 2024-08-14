@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    ports:
+      - '3100:80'
+    volumes:
+      - ./database:/var/www/html/database
+    restart: unless-stopped
