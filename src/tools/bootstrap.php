@@ -20,5 +20,5 @@ foreach($newsletterdb as $stmt) {
 
 file_put_contents(
     Utils::getAdminPasswordPath(),
-    password_hash(readline("Insert the new admin password: "), PASSWORD_BCRYPT)
+    password_hash(getenv('ADMIN_PASSWORD') ?? readline("Insert the new admin password: "), PASSWORD_BCRYPT)
 );

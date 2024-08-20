@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    nodejs \
+    npm \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip
 
@@ -25,5 +27,7 @@ RUN composer install \
     --no-scripts \
     --classmap-authoritative \
     --no-interaction
+
+RUN ADMIN_PASSWORD='qwe123' composer bootstrap --no-plugins
 
 EXPOSE 80
