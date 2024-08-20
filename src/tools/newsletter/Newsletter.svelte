@@ -4,7 +4,7 @@
   export let apiUrl;
   export let reprompt;
 
-  const LOCALSTORAGE_ITEM = 'newsletter.lastClosedAt';
+  const LOCALSTORAGE_ITEM = "newsletter.lastClosedAt";
   const NEVER_REPROMPT = -1;
 
   const SVGEmailData = `data:image/svg+xml;base64,${SVG_EMAIL_DATA}`;
@@ -20,9 +20,11 @@
   onMount(() => {
     let lastClosedAt = localStorage.getItem(LOCALSTORAGE_ITEM);
 
-    display = lastClosedAt ? (
-      lastClosedAt != NEVER_REPROMPT ? parseInt(lastClosedAt) + reprompt <= Date.now() : false
-    ) : true;
+    display = lastClosedAt
+      ? lastClosedAt != NEVER_REPROMPT
+        ? parseInt(lastClosedAt) + reprompt <= Date.now()
+        : false
+      : true;
   });
 
   function isValidEmail() {
@@ -31,15 +33,17 @@
 
   function validateEmail() {
     const isValid = isValidEmail();
-    emailInput.classList.toggle('green', isValid);
-    emailInput.classList.toggle('red', !isValid);
+    emailInput.classList.toggle("green", isValid);
+    emailInput.classList.toggle("red", !isValid);
 
-    const button = document.getElementById('newsletter-btn');
+    const button = document.getElementById("newsletter-btn");
   }
 
   function closeNewsletter(forever) {
-    newsletterElement.classList.add('newsletter-inactive');
-    setTimeout(() => { display = false; }, 600);
+    newsletterElement.classList.add("newsletter-inactive");
+    setTimeout(() => {
+      display = false;
+    }, 600);
     localStorage.setItem(LOCALSTORAGE_ITEM, forever ? -1 : Date.now());
   }
 
@@ -49,33 +53,29 @@
     if (!isValidEmail()) return;
 
     fetch(`${apiUrl}/newsletter/sub`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email
+        email: email,
       }),
     })
-    .then(response => {
-        if (response.ok)
-          return response.json();
-        throw new Error('Network response was not ok.');
-    })
-    .then(data => {
-        if (!data.ok)
-          throw new Error(data.error);
+      .then((response) => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        if (!data.ok) throw new Error(data.error);
 
         success = true;
         display = false;
-    })
-    .catch(error => {
-      console.log("There was an error fetching the data: " + error);
-    });
+      })
+      .catch((error) => {
+        console.log("There was an error fetching the data: " + error);
+      });
   }
-
 </script>
-
 
 {#if display}
   <div id="newsletter" bind:this={newsletterElement}>
@@ -83,33 +83,28 @@
     <p>Subscribe to our newsletter & stay updated!</p>
 
     <button on:click={closeNewsletter} id="close" title="Close">
-      <img src="{SVGCloseData}" alt="Close">
+      <img src={SVGCloseData} alt="Close" />
     </button>
 
     <form>
-        <div class="email-input">
-          <img src="{SVGEmailData}" alt="Email">
+      <div class="email-input">
+        <img src={SVGEmailData} alt="Email" />
 
-          <input
-            type="email"
-            placeholder="Enter your Email"
-            required
-            on:input={validateEmail}
-            bind:this={emailInput}
-            bind:value={email}
-            class:green={emailValid}
-            class:red={!emailValid && emailValid !== undefined}
-          >
-        </div>
+        <input
+          type="email"
+          placeholder="Enter your Email"
+          required
+          on:input={validateEmail}
+          bind:this={emailInput}
+          bind:value={email}
+          class:green={emailValid}
+          class:red={!emailValid && emailValid !== undefined}
+        />
+      </div>
 
-        <button
-          id="newsletter-btn"
-          type="submit"
-          on:click={subscribe}
-          class:success={success}
-        >
-          {success ? 'Subscribed!' : 'Subscribe'}
-        </button>
+      <button id="newsletter-btn" type="submit" on:click={subscribe} class:success>
+        {success ? "Subscribed!" : "Subscribe"}
+      </button>
     </form>
   </div>
 {/if}
@@ -125,8 +120,9 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: opacity 0.5s ease-out;
-    background-color: rgba(0, 0, 0, 0.25);
-    opacity: .9;
+    background-color: rgba(0, 0, 0, 0.55);
+    opacity: 0.9;
+    color: white;
   }
 
   #close {
@@ -175,7 +171,6 @@
     border-radius: 5px;
     font-size: 16px;
     outline: none;
-    color: rgba(0, 0, 0, .25);
   }
 
   form button {
@@ -216,5 +211,4 @@
       display: none;
     }
   }
-
 </style>
