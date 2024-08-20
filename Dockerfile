@@ -28,6 +28,6 @@ RUN composer install \
     --classmap-authoritative \
     --no-interaction
 
-RUN ADMIN_PASSWORD='qwe123' composer bootstrap --no-plugins
+RUN composer bootstrap --no-plugins
 
 EXPOSE 80

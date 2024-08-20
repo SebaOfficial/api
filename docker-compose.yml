@@ -3,6 +3,8 @@ services:
     build: .
     ports:
       - '3100:80'
+    environment:
+      - ADMIN_PASSWORD='qwe123!' # Edit this!
     volumes:
       - ./database:/var/www/html/database
     restart: unless-stopped

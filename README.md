@@ -1,4 +1,5 @@
 # Seba's API
+
 This is a collection of useful APIs for Sebastiano's projects.
 
 ## Endpoints
@@ -32,7 +33,7 @@ This is a collection of useful APIs for Sebastiano's projects.
    cp ./.env.example ./.env
    ```
 
-   And edit it with your information
+   And edit it with your information. Remember to also edit `docker-compose.yml` to add your admin password.
 
 3. Build and start the container
    ```bash
