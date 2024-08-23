@@ -17,6 +17,7 @@ $response->setHeaders([
 
 $router->mount('/pay', fn (Router $router) => (new Seba\API\Controllers\PaymentController($router, $response, $request))->init());
 $router->mount('/newsletter', fn (Router $router) => (new Seba\API\Controllers\NewsletterController($router, $response, $request))->init());
+$router->get('/ping', fn () => $response->setHeaders(['Content-Type' => 'text/plain'])->setBody('pong')->send());
 
 $router->onError(
     404,

@@ -4,6 +4,12 @@ This is a collection of useful APIs for Sebastiano's projects.
 
 ## Endpoints
 
+### Ping
+
+| HTTP Method | Endpoint | Authentication | Description                |
+|-------------|----------|----------------|----------------------------|
+| `GET`       | `/ping`  | None           | Check if the server is up. |
+
 ### Payments
 
 | HTTP Method   | Endpoint               | Authentication | Description                                                                                       |
